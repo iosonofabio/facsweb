@@ -1,5 +1,5 @@
-#/usr/bin/env python
-from application import application as app
+#!/usr/bin/env python
+from application import app
 
 
 # Script

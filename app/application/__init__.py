@@ -4,26 +4,34 @@ author:     Fabio Zanini
 date:       24/11/17
 content:    facsweb: better markers for FACS machines.
 '''
-def application(environ, start_response):
-    status = '200 OK'
-    output = 'Hello World from within the facsweb app, after all that!'
-
-    response_headers = [('Content-type', 'text/plain'),
-                        ('Content-Length', str(len(output)))]
-
-    start_response(status, response_headers)
-
-    return [output]
-#from flask import Flask
+#def application(environ, start_response):
+#    status = '200 OK'
+#    output = 'Hello World from within the facsweb app, after all that!'
 #
+#    response_headers = [('Content-type', 'text/plain'),
+#                        ('Content-Length', str(len(output)))]
+#
+#    start_response(status, response_headers)
+#
+#    return [output]
+import os
+from flask import Flask, render_template
+import jinja2
+
+
 ## TODO: fix static folder, this requires adapting HTML templates
-#hiv = Flask(__name__)
-#hiv.config.from_object('config')
+app = Flask(
+        __name__,
+        template_folder=os.path.dirname(__file__)+'/shared/templates',
+        )
+app.config.from_object('config')
 
-## welcome page is the index
-#from .blueprints.welcome import welcome
-#hiv.register_blueprint(welcome, url_prefix='')
-#
+# index page
+from .blueprints.landing import landing
+app.register_blueprint(
+        landing,
+        url_prefix='')
+
 #from .blueprints.tutorial import tutorial
 #hiv.register_blueprint(tutorial, url_prefix='/tutorial')
 #
