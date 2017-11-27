@@ -11,16 +11,47 @@
       <title>FACS web</title>
     {% endif %}
 
+    <!-- display message if javascript is disabled -->
+    <noscript>
+      <div class="alert alert-danger">
+        <p><span class="glyphicon glyphicon-warning-sign"></span><strong> Warning:</strong> You don't have JavaScript activated. For full functionality of our site JavaScript has to be enabled.</p>
+        <a href="http://www.enable-javascript.com/" target="_blank">How to enable JavaScript?</a>
+      </div>
+    </noscript>
+
     <!-- Load everything in the HEAD even if it slows down a bit, then it's cached -->
-    <script src="/static/components/jquery/dist/jquery.min.js"></script>
-    {% include "bootstrap.html" %}
-    {% include "d3.html" %}
-    {% include "crossCompatibility.html" %}
+    <!-- jquery -->
+    <script src="/static/node_modules/jquery/dist/jquery.min.js"></script>
+    <!-- end of jquery -->
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/static/node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link href="/static/css/starter-template.css" rel="stylesheet">
-    <link href="/static/css/hivevo_style.css" rel="stylesheet">
-    <!-- font for the website -->
+    <script src="/static/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- end of bootstrap -->
+
+    <!-- d3 -->
+    <link href="/static/css/d3_plots.css" rel="stylesheet" type="text/css">
+    <script src="/static/node_modules/d3/build/d3.js" charset="utf-8"></script>
+    <!-- end of d3 -->
+
+    <!-- d3-tip for tooltips -->
+    <link rel="stylesheet" href="/static/css/d3-tip.css">
+    <script type="text/javascript" src="/static/node_modules/d3-tip/index.js"></script>
+    <!-- end of d3-tip -->
+
+    <!-- JS polyfills (sigh!) -->
+    <script type="text/javascript" src="/static/js/polyfill.js"></script>
+    <!-- end of JS polyfills -->
+
+    <!-- CSS custom -->
+    <link href="/static/css/base_style.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Raleway">
+    <!-- end of CSS custom -->
+
+    <!-- BLOCK: head_end -->
     {% block head_end %}{% endblock %}
+    <!-- END OF BLOCK: head_end -->
 
   </head>
   <!-- HEAD -->
@@ -49,9 +80,11 @@
       </div>
     </nav>
     <!-- TOP NAVBAR -->
+
     <!-- CONTENT -->
     {% block contentwrapper %}{% block content %}{% endblock %}{% endblock %}
     <!-- CONTENT -->
+
     <!-- FOOTER -->
     {% block footerwrapper %}
     <div class="nav footer navbar-fixed-bottom">

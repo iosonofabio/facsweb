@@ -15,13 +15,14 @@ content:    facsweb: better markers for FACS machines.
 #
 #    return [output]
 import os
-from flask import Flask, render_template
+from flask import Flask
 import jinja2
 
 
 ## TODO: fix static folder, this requires adapting HTML templates
 app = Flask(
         __name__,
+        static_folder=os.path.dirname(__file__)+'/shared/static',
         template_folder=os.path.dirname(__file__)+'/shared/templates',
         )
 app.config.from_object('config')

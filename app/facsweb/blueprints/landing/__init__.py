@@ -6,8 +6,7 @@ content:    Blueprint for the welcome page.
 '''
 # Modules
 from flask import Blueprint, render_template
-#from ...models import PatientTableModel
-
+# from ...models import PatientTableModel
 
 
 # Blueprint
@@ -17,11 +16,11 @@ landing = Blueprint('landing', __name__,
                     template_folder='templates')
 
 
-
 # Views
 @landing.route('/', methods=['GET'])
 def index():
-    #table = PatientTableModel().get_table()    
-    return render_template('welcome.html',
-                           title='Landing page',
-                          )
+    # table = PatientTableModel().get_table()
+    return render_template(
+            'landing.html',
+            title='Landing page',
+            )

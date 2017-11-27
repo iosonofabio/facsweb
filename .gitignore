@@ -52,7 +52,7 @@ Session.vim
 
 # Specific folders to ignore or keep
 app/flask
-app/application/static/data
-app/application/static/tmp
-!app/application/static/components/*/dist
+app/facsweb/shared/static/data
+app/facsweb/shared/static/tmp
+app/facsweb/shared/static/node_modules
 
