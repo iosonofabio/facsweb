@@ -13,7 +13,9 @@ from flask import Blueprint, render_template
 landing = Blueprint('landing', __name__,
                     url_prefix='/',
                     static_folder='static',
-                    template_folder='templates')
+                    template_folder='templates',
+                    static_url_path='/static/landing',
+                    )
 
 
 # Views
