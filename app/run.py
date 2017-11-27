@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from application import app
+from facsweb import app
 
 
 # Script
