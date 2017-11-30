@@ -103,76 +103,120 @@ class FACSPlot {
         height = this.height,
         width = this.width,
         widthPlot = this.widthPlot,
-        xPlots = this.xPlots,
-        xlimScatter = data.data.xlim_scattering,
-        ylimScatter = data.data.ylim_scattering,
-        xlimAnti = data.data.xlim_antibodies,
-        ylimAnti = data.data.ylim_antibodies;
+        xPlots = this.xPlots;
+    
+    var charts = {},
+        antiXOffset = 0;
 
-    var charts = {
-        'sca': vis.append("g")
-            .attr("id", "scatteringPlot"),
-        'anti': vis.append("g")
+    if ('scattering' in data.data) {
+      antiXOffset += widthPlot + vpad;
+
+      var xlimScatter = data.data.xlim_scattering,
+          ylimScatter = data.data.ylim_scattering;
+
+      charts.sca = vis.append("g")
+            .attr("id", "scatteringPlot");
+
+      var xSca = d3.scaleLinear()
+          .domain(xlimScatter)
+          .range([0, widthPlot]),
+          ySca = d3.scaleLinear()
+          .domain(ylimScatter)
+          .range([height, 0]);
+
+      var xScaAxis = d3.axisBottom().scale(xSca),
+          yScaAxis = d3.axisLeft().scale(ySca);
+
+      charts.sca.append("text")
+          .attr("x", widthPlot / 2)
+          .attr("dy", "-1ex")
+          .attr("fill", "#000")
+          .style("text-anchor", "middle")
+          .text("Scattering");
+
+      charts.sca.append("g")
+          .attr("class", "d3-axis")
+          .attr("transform", "translate(0," + height + ")")
+          .call(xScaAxis)
+          .append("text")
+          .attr("x", widthPlot / 2)
+          .attr("y", 50)
+          .attr("fill", "#000")
+          .style("text-anchor", "middle")
+          .text(data.data.scattering_axis_labels[0]);
+          
+      charts.sca.append("g")
+          .attr("class", "d3-axis")
+          .call(yScaAxis)
+          .append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("fill", "#000")
+          .attr("dy", "-3.5em")
+          .attr("x", -height / 2)
+          .style("text-anchor", "middle")
+          .text(data.data.scattering_axis_labels[1]);
+
+      charts.sca.append("g")
+          .attr("class", "scatter point")
+          .selectAll("scattering_point")
+          .data(data.data.scattering)
+          .enter()
+          .append("circle")
+          .attr("class", "circle scattering_point")
+          .attr("fill", function(d, i) {
+            if (data.data.identity[i])
+              return "#ffb544";
+            else
+              return "steelblue";
+          })
+          .attr("cx", function(d) { return xSca(d[0]); })
+          .attr("cy", function(d) { return ySca(d[1]); })
+          .attr("r", 3);
+
+      // Roots of predictors
+      charts.sca.append("g")
+          .attr("class", "scatter_model_root")
+          .selectAll("scattering_root")
+          .data(data.models.scattering.roots)
+          .enter()
+          .append("circle")
+          .attr("class", "circle scattering_root")
+          .attr("fill", "#222")
+          .attr("cx", function(d) { return xSca(d[0]); })
+          .attr("cy", function(d) { return ySca(d[1]); })
+          .attr("r", 1);
+
+      charts.sca.append("g")
+          .attr("class", "scatter_model_root")
+          .selectAll("scattering_root")
+          .data(data.models.scattering.roots_pos)
+          .enter()
+          .append("circle")
+          .attr("class", "circle scattering_root")
+          .attr("fill", "#AAA")
+          .attr("cx", function(d) { return xSca(d[0]); })
+          .attr("cy", function(d) { return ySca(d[1]); })
+          .attr("r", 1);
+      charts.sca.append("g")
+          .attr("class", "scatter_model_root")
+          .selectAll("scattering_root")
+          .data(data.models.scattering.roots_neg)
+          .enter()
+          .append("circle")
+          .attr("class", "circle scattering_root")
+          .attr("fill", "#AAA")
+          .attr("cx", function(d) { return xSca(d[0]); })
+          .attr("cy", function(d) { return ySca(d[1]); })
+          .attr("r", 1);
+    }
+
+    // Antibody chart
+    charts.anti = vis.append("g")
             .attr("id", "antibodyPlot")
-            .attr("transform", "translate("+(widthPlot+vpad)+", 0)"),
-    };
+            .attr("transform", "translate("+antiXOffset+", 0)");
 
-    // NOTE: no need to use margins here, everything will be an SVG group of vis
-    var xSca = d3.scaleLinear()
-        .domain(xlimScatter)
-        .range([0, widthPlot]),
-        ySca = d3.scaleLinear()
-        .domain(ylimScatter)
-        .range([height, 0]);
-
-    var xScaAxis = d3.axisBottom().scale(xSca),
-        yScaAxis = d3.axisLeft().scale(ySca);
-
-    charts.sca.append("text")
-        .attr("x", widthPlot / 2)
-        .attr("dy", "-1ex")
-        .attr("fill", "#000")
-        .style("text-anchor", "middle")
-        .text("Scattering");
-
-    charts.sca.append("g")
-        .attr("class", "d3-axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xScaAxis)
-        .append("text")
-        .attr("x", widthPlot / 2)
-        .attr("y", 50)
-        .attr("fill", "#000")
-        .style("text-anchor", "middle")
-        .text(data.data.scattering_axis_labels[0]);
-        
-    charts.sca.append("g")
-        .attr("class", "d3-axis")
-        .call(yScaAxis)
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("fill", "#000")
-        .attr("dy", "-3.5em")
-        .attr("x", -height / 2)
-        .style("text-anchor", "middle")
-        .text(data.data.scattering_axis_labels[1]);
-
-    charts.sca.append("g")
-        .attr("class", "scatter point")
-        .selectAll("scattering_point")
-        .data(data.data.scattering)
-        .enter()
-        .append("circle")
-        .attr("class", "circle scattering_point")
-        .attr("fill", function(d, i) {
-          if (data.data.identity[i])
-            return "#ffb544";
-          else
-            return "steelblue";
-        })
-        .attr("cx", function(d) { return xSca(d[0]); })
-        .attr("cy", function(d) { return ySca(d[1]); })
-        .attr("r", 3);
+    var xlimAnti = data.data.xlim_antibodies,
+        ylimAnti = data.data.ylim_antibodies;
 
     // NOTE: no need to use margins here, everything will be an SVG group of vis
     var xAnti = d3.scaleLinear()
@@ -214,13 +258,14 @@ class FACSPlot {
         .style("text-anchor", "middle")
         .text(data.data.antibody_axis_labels[1]);
 
+    // Data points
     charts.anti.append("g")
-        .attr("class", "scatter point")
-        .selectAll("scattering_point")
+        .attr("class", "anti point")
+        .selectAll("antibody_point")
         .data(data.data.antibodies)
         .enter()
         .append("circle")
-        .attr("class", "circle scattering_point")
+        .attr("class", "circle antibody_point")
         .attr("fill", function(d, i) {
           if (data.data.identity[i])
             return "#ffb544";
@@ -231,54 +276,18 @@ class FACSPlot {
         .attr("cy", function(d) { return yAnti(d[1]); })
         .attr("r", 3);
 
-    // Roots of predictors
-    charts.sca.append("g")
-        .attr("class", "scatter_model_root")
-        .selectAll("scattering_root")
-        .data(data.models.scattering.roots)
-        .enter()
-        .append("circle")
-        .attr("class", "circle scattering_root")
-        .attr("fill", "#222")
-        .attr("cx", function(d) { return xSca(d[0]); })
-        .attr("cy", function(d) { return ySca(d[1]); })
-        .attr("r", 1);
-
-    charts.sca.append("g")
-        .attr("class", "scatter_model_root")
-        .selectAll("scattering_root")
-        .data(data.models.scattering.roots_pos)
-        .enter()
-        .append("circle")
-        .attr("class", "circle scattering_root")
-        .attr("fill", "#AAA")
-        .attr("cx", function(d) { return xSca(d[0]); })
-        .attr("cy", function(d) { return ySca(d[1]); })
-        .attr("r", 1);
-    charts.sca.append("g")
-        .attr("class", "scatter_model_root")
-        .selectAll("scattering_root")
-        .data(data.models.scattering.roots_neg)
-        .enter()
-        .append("circle")
-        .attr("class", "circle scattering_root")
-        .attr("fill", "#AAA")
-        .attr("cx", function(d) { return xSca(d[0]); })
-        .attr("cy", function(d) { return ySca(d[1]); })
-        .attr("r", 1);
-
-    charts.anti.append("g")
-        .attr("class", "antibody_model_root")
-        .selectAll("antibody_root")
-        .data(data.models.antibodies.roots)
-        .enter()
-        .append("circle")
-        .attr("class", "circle antibody_root")
-        .attr("fill", "#222")
-        .attr("cx", function(d) { return xAnti(d[0]); })
-        .attr("cy", function(d) { return yAnti(d[1]); })
-        .attr("r", 1);
-
+      // Model roots
+      charts.anti.append("g")
+          .attr("class", "antibody_model_root")
+          .selectAll("antibody_root")
+          .data(data.models.antibodies.roots)
+          .enter()
+          .append("circle")
+          .attr("class", "circle antibody_root")
+          .attr("fill", "#222")
+          .attr("cx", function(d) { return xAnti(d[0]); })
+          .attr("cy", function(d) { return yAnti(d[1]); })
+          .attr("r", 1);
     charts.anti.append("g")
         .attr("class", "antibody_model_root")
         .selectAll("antibody_root")
