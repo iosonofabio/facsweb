@@ -27,37 +27,13 @@ app = Flask(
         )
 app.config.from_object('config')
 
+
 # index page
 from .blueprints.landing import landing
 app.register_blueprint(
         landing,
         url_prefix='')
 
-#from .blueprints.tutorial import tutorial
-#hiv.register_blueprint(tutorial, url_prefix='/tutorial')
-#
-#from .blueprints.patient import patient
-#hiv.register_blueprint(patient)
-#
-#from .blueprints.region import region
-#hiv.register_blueprint(region)
-#
-#from .blueprints.data import data
-#hiv.register_blueprint(data)
-#
-#from .blueprints.method import method
-#hiv.register_blueprint(method)
-#
-#from .blueprints.static import static
-#hiv.register_blueprint(static)
-#
-#from .blueprints.download import download
-#hiv.register_blueprint(download)
-#
-## RESTful API
-#from .blueprints.api import api_bp
-#hiv.register_blueprint(api_bp)
-#
-#
-#from .blueprints.xsectional import xsectional;
-#hiv.register_blueprint(xsectional)
+# REST API
+from .blueprints.api import api_bp
+app.register_blueprint(api_bp)

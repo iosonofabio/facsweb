@@ -3,12 +3,14 @@
 <div class="container">
   <div class="panel panel-default">
     <div class="panel-body"> 
-      <div class="col-md-6">
-        <h5 class="caption">Hello world!</h5>
-        <div align="center">
+      <div class="col-lg-auto" id="centralDiv">
+        <p>Select fill color:</p>
+        <select id="inputTissue">
+        </select>
+        <select id="inputCellType">
+        </select>
+        <div align="center" id="mainSvgDiv">
           <svg id="mainSvg" style="max-width:80%"></svg>
-          <!-- NOTE: the tag below is a trick for the tree plot -->
-          <h5 class="text-muted" style="text-align:center">FACS gates</h5>
         </div>
       </div>
     </div>
